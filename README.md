@@ -1,6 +1,7 @@
 # 🌌 Sky Is the Limit
 
 **Sky Is the Limit** is a space-themed web application that showcases data from NASA's APIs, including the Astronomy Picture of the Day, Mars Rover photos, and real-time Mars weather insights. This project combines modern frontend technologies with real-world data to demonstrate how we can turn raw API responses into engaging, interactive visual experiences.
+https://sky-is-the-limit-ten.vercel.app/
 
 ---
 
@@ -16,6 +17,7 @@ I created this project to demonstrate my frontend development skills using **Nex
 - A dynamic **Mars Rover Imagery** section, showing real photos taken by the _Curiosity_ rover with filtering by camera types (excluding MARDI and MAHLI due to image compatibility).
 - A detailed **Mars Weather Dashboard** powered by the InSight lander, showing daily temperatures and a polar chart visualizing **wind direction** on Mars.
 - Loading states, error handling, and dynamic filtering for a smooth and responsive user experience across all devices.
+- Due to NASA API rate limitations, Zustand state management was implemented to cache API responses, reducing unnecessary requests and staying within API limits.
 
 ---
 
