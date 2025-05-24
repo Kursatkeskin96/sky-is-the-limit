@@ -1,103 +1,122 @@
+"use client";
 import Image from "next/image";
+import TechStack from "@/components/TechStack";
+import { useState, useEffect } from "react";
+import Loading from "@/components/Loading";
+import api from "./api/api";
+import Modal from "@/components/Modal";
+import mars from "@/lib/images/mars.webp";
+import { ApodData } from "@/lib/types";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [loading, setLoading] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [apod, setApod] = useState<ApodData>({
+    url: "",
+    title: "",
+    explanation: "",
+  });
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    const fetchApod = async () => {
+      setLoading(true);
+      try {
+        const { data } = await api.get("/planetary/apod");
+        setApod({
+          url: data.url,
+          title: data.title,
+          explanation: data.explanation,
+        });
+      } catch (err) {
+        console.error("Failed to fetch APOD:", err);
+        setShowModal(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchApod();
+  }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  return (
+    <div className="max-w-7xl mx-auto  px-4 md:px-8 xl:px-0">
+      <div className="flex justify-between items-center mt-[42px] flex-wrap">
+        <div className="flex-col xl:max-w-[50%]">
+          <h1 className="text-[#FF8854] pb-4  text-[24px] font-semibold">
+            About this project
+          </h1>
+          <p className="text-[#e2e1e1]">
+            The name <span className="font-semibold">Sky Is The Limit</span>{" "}
+            reflects both the theme and the mindset behind this project.
+            It&apos;s not just about space, it&apos;s about showcasing my skills
+            as a frontend developer while expressing{" "}
+            <span className="font-semibold">
+              my passion for continuous learning
+            </span>
+            . In tech, there&apos;s always something new to discover. I see the
+            sky as my only limit—a symbol of infinite growth in the world of
+            development.
+          </p>
+          <p className="text-[#e2e1e1] pt-4">
+            This project includes loading states, error handling, and dynamic
+            filtering by camera categories to retrieve specific sets of images
+            from NASA&apos;s Mars Rover API. It&apos;s fully responsive across
+            devices, ensuring a seamless experience on mobile and desktop.
+            You&apos;ll explore the Astronomy Picture of the Day (APOD), which
+            features daily imagery and insights from deep space. The project
+            also includes Mars Rover Imagery, showcasing real photos captured by
+            NASA&apos;s rovers on the Martian surface. Additionally,
+            there&apos;s a Mars Weather Dashboard that presents detailed
+            atmospheric data along with a polar chart visualizing wind
+            direction, offering an interactive look into the Martian climate.
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <Image
+          src={mars}
+          width={500}
+          alt="earth"
+          className="flex md:hidden lg:hidden xl:flex"
+        />
+      </div>
+      <div>
+        <h2 className="text-[#FF8854] pb-4  text-[24px] mt-[82px] text-center font-semibold">
+          Tech stack
+        </h2>
+        <TechStack />
+      </div>
+      {apod.url && apod.url !== "" && apod.url.endsWith(".jpg") && (
+        <>
+          <h3 className="text-[#FF8854] pb-4  text-[24px] mt-[82px] text-center font-semibold">
+            Astronomy picture of the day
+          </h3>
+          <div className="flex justify-between items-center flex-wrap">
+            <Image
+              src={apod.url}
+              alt="apod"
+              width={500}
+              height={300}
+              className="mt-8 rounded-lg mx-auto"
+            />
+            <div className="flex-col xl:max-w-[50%] mt-4 xl:mt-0">
+              <h4 className="text-white text-left text-[18px] ">{apod.title}</h4>
+              <p className="text-[#e2e1e1] text-left text-[14px] mt-4">
+                {apod.explanation}
+              </p>
+            </div>
+          </div>
+        </>
+      )}
+      {showModal && (
+        <Modal
+          title="Something went wrong"
+          description="We ran into an issue while loading the data. Please try again in a moment."
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 }
